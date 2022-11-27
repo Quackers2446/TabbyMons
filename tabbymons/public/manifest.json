@@ -1,0 +1,19 @@
+{
+  "short_name": "TabbyMons",
+  "name": "TabbyMons w/ Carbon",
+  "icons": {
+    "16": "/images/16.png",
+    "32": "/images/32.png",
+    "48": "/images/48.png",
+    "128": "/images/128.png"
+  },
+  "description": "Gotta tab 'em all",
+  "version": "1.0",
+  "manifest_version": 3,
+  "chrome_url_overrides": {
+    "newtab": "index.html"
+  },
+  "permissions": [
+    "storage"
+  ] 
+}
