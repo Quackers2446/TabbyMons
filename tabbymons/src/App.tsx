@@ -20,11 +20,12 @@ function App() {
   //extension: Spawns can even be correlated to time of day. i.e. Solrock in day, lunatone at night.
   
   const pokedexNumber = getRandNum(1, 905); // Currently 905 Pokemon in Pokedex; update when new generations come out.
-  const shinyChance = getRandNum(1,20); // Shiny rate. It's currently set lower for fun.
+  const shinyRate = 20; // Shiny rate. It's currently set lower for fun.
+  const shinyChance = getRandNum(1,shinyRate);
 
   let image =  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/";
   
-  if (shinyChance == 20) {
+  if (shinyChance == shinyRate) {
      image += "shiny/" + pokedexNumber + ".png";
   } else {
     image += pokedexNumber + ".png";
