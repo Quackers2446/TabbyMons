@@ -1,10 +1,10 @@
-const path = require("path")
+const path = require("path");
 
 module.exports = {
-    webpack: {
-        alias: {
-            // Alias ~ to src, e.g ~/components/whatever
-            "~": path.join(__dirname, "src"),
-        },
+  webpack: {
+    alias: {
+      // Alias ~ to src, e.g ~/components/whatever
+      "~": path.join(__dirname, "src"),
     },
-}
+  },
+};
