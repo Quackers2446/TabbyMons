@@ -1,7 +1,11 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { Pokedex } from './pokeapi-js-wrapper';
+import internal from 'stream';
+
+function getRandNum(min: number, max: number) {
+  return Math.round(Math.random() * (max - min) + min);
+}
 
 function App() {
   const Pokedex = require("pokeapi-js-wrapper")
@@ -12,12 +16,16 @@ function App() {
     console.log(response)
   })
 
+  const pokedexNumber = getRandNum(1, 905);
+  const image = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/" + pokedexNumber + ".png";
+  console.log(image);
+
   return (
     
     
     <div className="App">
       <header className="App-header">
-        <img src={"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/133.png"} className="App-logo" alt="logo" />
+        <img src={image} className="App-logo" alt="logo" />
 
         <p>
           Welcome to TabbyMons
