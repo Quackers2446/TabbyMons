@@ -15,5 +15,11 @@
   },
   "permissions": [
     "storage"
-  ] 
+  ],
+  "host_permissions": [
+    "https://unpkg.com/pokeapi-js-wrapper/dist/index.js"
+  ],
+  "optional_host_permissions": [
+    "*://*/*"
+  ]
 }

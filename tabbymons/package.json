@@ -2,11 +2,11 @@
   "name": "tabbymons",
   "version": "0.1.0",
   "scripts": {
-    "build": "DISABLE_ESLINT_PLUGIN=true react-scripts build",
-    "eject": "DISABLE_ESLINT_PLUGIN=true react-scripts eject",
+    "build": "DISABLE_ESLINT_PLUGIN=true craco build",
+    "eject": "DISABLE_ESLINT_PLUGIN=true craco eject",
     "lint": "eslint . --ext ts,tsx,jsx --max-warnings=0 --cache",
-    "start": "DISABLE_ESLINT_PLUGIN=true react-scripts start",
-    "test": "DISABLE_ESLINT_PLUGIN=true react-scripts test"
+    "start": "DISABLE_ESLINT_PLUGIN=true craco start",
+    "test": "DISABLE_ESLINT_PLUGIN=true craco test"
   },
   "dependencies": {
     "@carbon/icons-react": "^10.22.0",
@@ -16,7 +16,9 @@
     "carbon-components-react": "^7.25.0",
     "carbon-icons": "^7.0.7",
     "firebase": "^9.14.0",
+    "https-browserify": "^1.0.0",
     "normalize.css": "^8.0.1",
+    "pokeapi-js-wrapper": "^1.2.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-google-button": "^0.7.2",
@@ -24,13 +26,15 @@
     "react-hook-form": "^7.39.3",
     "react-router": "^6.4.3",
     "react-router-dom": "^6.4.3",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
     "web-vitals": "^2.1.4",
     "zod": "^3.19.1"
   },
   "devDependencies": {
     "@craco/craco": "^6.4.3",
-    "@types/carbon-components-react": "^7.55.2",
     "@types/carbon__icons-react": "^10.22.0",
+    "@types/carbon-components-react": "^7.55.2",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.3",
     "@types/react": "^18.0.25",

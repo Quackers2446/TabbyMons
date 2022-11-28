@@ -24,6 +24,7 @@ specifiers:
   eslint-plugin-react-hooks: ^4.6.0
   firebase: ^9.14.0
   normalize.css: ^8.0.1
+  pokeapi-js-wrapper: 1.2.2
   prettier: ^2.7.1
   prettier-plugin-jsdoc: ^0.4.2
   react: ^18.2.0
@@ -48,6 +49,7 @@ dependencies:
   carbon-icons: 7.0.7
   firebase: 9.14.0
   normalize.css: 8.0.1
+  pokeapi-js-wrapper: 1.2.2
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-google-button: 0.7.2_react@18.2.0
@@ -3840,6 +3842,14 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
+  /axios/0.24.0:
+    resolution: {integrity: sha512-Q6cWsys88HoPgAaFAVUb0WpPk0O8iTeisR9IMqy9G8AbO4NlpVknrnQS03zzF9PGAWgO3cgletO3VjV/P7VztA==}
+    dependencies:
+      follow-redirects: 1.15.2
+    transitivePeerDependencies:
+      - debug
+    dev: false
+
   /axobject-query/2.2.0:
     resolution: {integrity: sha512-Td525n+iPOOyUQIeBfcASuG6uJsDOITl7Mds5gFyerkWiX7qhUTdYUBlSgNMyVqtSJqwpt1kXGLdUt6SykLMRA==}
     dev: true
@@ -5954,7 +5964,6 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
-    dev: true
 
   /fork-ts-checker-webpack-plugin/6.5.2_fwd4bdvtlcwk7dnkbybkcmtpo4:
     resolution: {integrity: sha512-m5cUmF30xkZ7h4tWUgTAcEaKmUW7tfyUyTqNNOz7OxWJ0v1VWKTcOvH8FWHUwSjlW/356Ijc9vi3XfcPstpQKA==}
@@ -7479,6 +7488,12 @@ packages:
       type-check: 0.4.0
     dev: true
 
+  /lie/3.1.1:
+    resolution: {integrity: sha512-RiNhHysUjhrDQntfYSfY4MU24coXXdEOgw9WGcKHNeEwffDYbF//u87M1EWaMGzuFoSbqW0C9C6lEEhDOAswfw==}
+    dependencies:
+      immediate: 3.0.6
+    dev: false
+
   /lie/3.3.0:
     resolution: {integrity: sha512-UaiMJzeWRlEujzAuw5LokY1L5ecNQYZKfmyZ9L7wDHb/p5etKaxXhohBcrw0EYby+G/NA52vRSN4N39dxHAIwQ==}
     dependencies:
@@ -7512,6 +7527,12 @@ packages:
     resolution: {integrity: sha512-ZvFw1KWS3GVyYBYb7qkmRM/WwL2TQQBxgCK62rlvm4WpVQ23Nb4tYjApUlfjrEGvOs7KHEsmyUn75OHZrJMWPw==}
     engines: {node: '>= 12.13.0'}
     dev: true
+
+  /localforage/1.10.0:
+    resolution: {integrity: sha512-14/H1aX7hzBBmmh7sGPd+AOMkkIrHM3Z1PAyGgZigA1H1p5O5ANnMyWzvpAETtG68/dC4pC0ncy3+PPGzXZHPg==}
+    dependencies:
+      lie: 3.1.1
+    dev: false
 
   /locate-path/3.0.0:
     resolution: {integrity: sha512-7AO748wWnIhNqAuaty2ZWHkQHRSNfPVIsPIfwEOWO22AmaoVrWavlOcMR5nzTLNYvp36X220/maaRsrec1G65A==}
@@ -8352,6 +8373,15 @@ packages:
     dependencies:
       find-up: 3.0.0
     dev: true
+
+  /pokeapi-js-wrapper/1.2.2:
+    resolution: {integrity: sha512-KdjBHOqH2TJ4Jxd+1c+7CS0eD4bu5rcKRdqQCqBFZ/xmWF43eJtPLUI5tqo7ZdVpR995/WlK9jRwihZQ7l1kvw==}
+    dependencies:
+      axios: 0.24.0
+      localforage: 1.10.0
+    transitivePeerDependencies:
+      - debug
+    dev: false
 
   /postcss-attribute-case-insensitive/5.0.2_postcss@8.4.19:
     resolution: {integrity: sha512-XIidXV8fDr0kKt28vqki84fRK8VW8eTuIa4PChv2MqKuT6C9UjmSKzen6KaWhWEoYvwxFCa7n/tC1SZ3tyq4SQ==}
