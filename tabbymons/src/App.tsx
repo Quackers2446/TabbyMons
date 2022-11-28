@@ -1,15 +1,23 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import * as Pokedex from "./pokeapi-js-wrapper/index.js";
+import { Pokedex } from './pokeapi-js-wrapper';
 
 function App() {
+  const Pokedex = require("pokeapi-js-wrapper")
+  const P = new Pokedex.Pokedex()
+  
+  P.getPokemonByName("eevee")
+  .then((response: any) => {
+    console.log(response)
+  })
+
   return (
     
     
     <div className="App">
       <header className="App-header">
-        <img src={"https://archives.bulbagarden.net/media/upload/thumb/5/53/054Psyduck.png/1200px-054Psyduck.png"} className="App-logo" alt="logo" />
+        <img src={"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/133.png"} className="App-logo" alt="logo" />
 
         <p>
           Welcome to TabbyMons
