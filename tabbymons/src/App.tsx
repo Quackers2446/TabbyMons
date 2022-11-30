@@ -58,20 +58,19 @@ function App() {
 
     flavorText(pokedexNumber).then((text) => {
       setFlavortext(text);
-
-      if (!localStorage.getItem("localDex")) {
-        let dex: { [key: number]: any } = {};
-        for (let i = 1; i <= 905; i++) dex[i] = { Encounters: 0, Shiny: 0 };
-        localStorage.setItem("localDex", JSON.stringify(dex));
-      }
-      let tempLocalDex = localStorage.getItem("localDex");
-      if (tempLocalDex) {
-        let localDex = JSON.parse(tempLocalDex);
-        localDex[pokedexNumber].Encounters += 1;
-        if (shinyChance == shinyRate) localDex[pokedexNumber].shiny += 1;
-        localStorage.setItem("localDex", JSON.stringify(localDex));
-      }
     });
+    if (!localStorage.getItem("localDex")) {
+      let dex: { [key: number]: any } = {};
+      for (let i = 1; i <= 905; i++) dex[i] = { Encounters: 0, Shiny: 0 };
+      localStorage.setItem("localDex", JSON.stringify(dex));
+    }
+    let tempLocalDex = localStorage.getItem("localDex");
+    if (tempLocalDex) {
+      let localDex = JSON.parse(tempLocalDex);
+      localDex[pokedexNumber].Encounters += 1;
+      if (shinyChance == shinyRate) localDex[pokedexNumber].shiny += 1;
+      localStorage.setItem("localDex", JSON.stringify(localDex));
+    }
   }, []);
 
   console.log(flavortext);
