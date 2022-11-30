@@ -11,13 +11,9 @@ function getRandNum(min: number, max: number) {
   return Math.round(Math.random() * (max - min) + min);
 }
 
-function determineHabitat() {
+function determineHabitat() {}
 
-}
-
-function determineSpawn() {
-
-}
+function determineSpawn() {}
 
 async function flavorText(pokeID: number): Promise<string> {
   const P = new Pokedex.Pokedex();
@@ -26,19 +22,19 @@ async function flavorText(pokeID: number): Promise<string> {
 
   for (let i = 0; i < pokemon.flavor_text_entries.length; i++) {
     if (pokemon.flavor_text_entries[i].language.name == "en") {
-      console.log(pokemon.names)
+      console.log(pokemon.names);
       return pokemon.flavor_text_entries[i].flavor_text;
     }
   }
 
-  console.log("No Index: " + 0)
+  console.log("No Index: " + 0);
   return pokemon.flavor_text_entries[0].flavor_text;
 }
 
 function App() {
   const P = new Pokedex.Pokedex();
-  const [flavortext, setFlavortext] = React.useState<string>()
-  let [image, setImage] = React.useState<string>()
+  const [flavortext, setFlavortext] = React.useState<string>();
+  let [image, setImage] = React.useState<string>();
 
   //TODO: Different rates for rarer pokemon.
   //IDEA: Can set spawns to different reigons. We could even do different routes like in a pokemon game.
@@ -49,7 +45,8 @@ function App() {
     const shinyRate = 20; // Shiny rate. It's currently set lower for fun.
     const shinyChance = getRandNum(1, shinyRate);
 
-    let pokemonImage = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/";
+    let pokemonImage =
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/";
 
     if (shinyChance == shinyRate) {
       pokemonImage += "shiny/" + pokedexNumber + ".png";
@@ -57,19 +54,36 @@ function App() {
       pokemonImage += pokedexNumber + ".png";
     }
 
-    setImage(pokemonImage)
+    setImage(pokemonImage);
 
     flavorText(pokedexNumber).then((text) => {
-      setFlavortext(text)
-    })
+      setFlavortext(text);
 
-  }, [])
+      if (!localStorage.getItem("localDex")) {
+        let dex: { [key: number]: any } = {};
+        for (let i = 1; i <= 905; i++) dex[i] = { Encounters: 0, Shiny: 0 };
+        localStorage.setItem("localDex", JSON.stringify(dex));
+      }
+      let tempLocalDex = localStorage.getItem("localDex");
+      if (tempLocalDex) {
+        let localDex = JSON.parse(tempLocalDex);
+        localDex[pokedexNumber].Encounters += 1;
+        if (shinyChance == shinyRate) localDex[pokedexNumber].shiny += 1;
+        localStorage.setItem("localDex", JSON.stringify(localDex));
+      }
+    });
+  }, []);
 
-  console.log(flavortext)
+  console.log(flavortext);
 
   return (
     <div className="App-header">
-      <img src={image} className="App-logo" style={{ width: 'auto', height: 'auto' }} alt="logo" />
+      <img
+        src={image}
+        className="App-logo"
+        style={{ width: "auto", height: "auto" }}
+        alt="logo"
+      />
       <p className="content-container"> {flavortext}</p>
       {/* <a
                   className="App-link"
