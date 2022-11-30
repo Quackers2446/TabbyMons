@@ -5,6 +5,8 @@
 .App-logo {
   height: 40vmin;
   pointer-events: none;
+  justify-content: center;
+  align-items: center;
   -webkit-filter: drop-shadow(7px 7px 7px rgb(16, 16, 16));
   filter: drop-shadow(7px 7px 7px rgb(16, 16, 16));
 }
@@ -24,17 +26,69 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  font-family: "Light";
 }
 
 .App-link {
   color: #61dafb;
 }
 
+
 @keyframes App-logo-spin {
   0% {
     transform: rotate(2deg);
   }
+
   100% {
     transform: rotate(-2deg);
   }
+}
+
+@font-face {
+  font-family: 'Light';
+  src: local('PKMN RBYGSC'), url("./fonts/PKMN RBYGSC.ttf") format('truetype');
+}
+
+.main-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  gap: 1rem;
+  text-align: center;
+
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/* .container {
+  font-family: "Light";
+} */
+
+/* @media (prefers-reduced-motion: no-preference) {
+  .main-container {
+    animation: fade-in-up 1s;
+  }
+} */
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translate(0, 2rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+}
+
+.content-container {
+  width: min(max(50%, 500px), 850px);
+  text-align: center;
 }
