@@ -2,100 +2,76 @@ import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import internal from "stream";
-import { string } from "zod";
+import { array, string } from "zod";
 import * as Pokedex from "pokeapi-js-wrapper";
+import "./fonts/PKMN RBYGSC.ttf";
+import { Tile } from "carbon-components-react";
 
 function getRandNum(min: number, max: number) {
   return Math.round(Math.random() * (max - min) + min);
 }
 
-async function toLocalDex(): Promise<Record<string, any>> {
+function determineHabitat() {
+
+}
+
+function determineSpawn() {
+
+}
+
+async function flavorText(pokeID: number): Promise<string> {
   const P = new Pokedex.Pokedex();
-  let localDex: Record<string, any> = {};
 
-  for (let i = 1; i <= 905; i++) {
-    const pokemon: any = await P.getPokemonSpeciesByName(i);
+  const pokemon: any = await P.getPokemonSpeciesByName(pokeID);
 
-    if (pokemon) {
-      if (pokemon.habitat) {
-        if (!(pokemon.habitat.name in localDex))
-          localDex[pokemon.habitat.name as string] = [];
-        localDex[pokemon.habitat.name as string].push(i);
-      } else if (pokemon.evolves_from_species) {
-        let poke: any = await P.getPokemonByName(
-          pokemon.evolves_from_species.name
-        );
-        if (poke.habitat) {
-          if (!(poke.habitat.name in localDex))
-            localDex[poke.habitat.name as string] = [];
-          localDex[poke.habitat.name as string].push(i);
-        } else if (poke.evolves_from_species) {
-          let poke2: any = await P.getPokemonByName(
-            poke.evolves_from_species.name
-          );
-          if (poke2.habitat) {
-            if (!(poke2.habitat.name in localDex))
-              localDex[poke2.habitat.name as string] = [];
-            localDex[poke2.habitat.name as string].push(i);
-          } else {
-            if (!("Does Not Spawn" in localDex))
-              localDex["Does Not Spawn" as string] = [];
-            localDex["Does Not Spawn"].push(i);
-          }
-        } else {
-          if (!("Does Not Spawn" in localDex))
-            localDex["Does Not Spawn" as string] = [];
-          localDex["Does Not Spawn"].push(i);
-        }
-      }
-    } else {
-      if (!("Does Not Spawn" in localDex))
-        localDex["Does Not Spawn" as string] = [];
-      localDex["Does Not Spawn"].push(i);
+  for (let i = 0; i < pokemon.flavor_text_entries.length; i++) {
+    if (pokemon.flavor_text_entries[i].language.name == "en") {
+      console.log(pokemon.names)
+      return pokemon.flavor_text_entries[i].flavor_text;
     }
   }
-  return localDex;
+
+  console.log("No Index: " + 0)
+  return pokemon.flavor_text_entries[0].flavor_text;
 }
 
 function App() {
-  React.useEffect(() => {
-    (async () => {
-      let localDex = await toLocalDex();
-      console.log(JSON.stringify(localDex));
-    })();
-  }, []);
-  // const Pokedex = require("pokeapi-js-wrapper");
   const P = new Pokedex.Pokedex();
-
-  P.getPokemonSpeciesByName(25).then(function (response: any) {
-    console.log(response);
-  });
+  const [flavortext, setFlavortext] = React.useState<string>()
+  let [image, setImage] = React.useState<string>()
 
   //TODO: Different rates for rarer pokemon.
   //IDEA: Can set spawns to different reigons. We could even do different routes like in a pokemon game.
   //extension: Spawns can even be correlated to time of day. i.e. Solrock in day, lunatone at night.
 
-  const pokedexNumber = getRandNum(1, 905); // Currently 905 Pokemon in Pokedex; update when new generations come out.
-  const shinyRate = 20; // Shiny rate. It's currently set lower for fun.
-  const shinyChance = getRandNum(1,shinyRate);
+  React.useEffect(() => {
+    const pokedexNumber = getRandNum(1, 905); // Currently 905 Pokemon in Pokedex; update when new generations come out.
+    const shinyRate = 20; // Shiny rate. It's currently set lower for fun.
+    const shinyChance = getRandNum(1, shinyRate);
 
-  let image =  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/";
-  
-  if (shinyChance == shinyRate) {
-     image += "shiny/" + pokedexNumber + ".png";
-  } else {
-    image += pokedexNumber + ".png";
-  }
-  console.log(image);
+    let pokemonImage = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/";
+
+    if (shinyChance == shinyRate) {
+      pokemonImage += "shiny/" + pokedexNumber + ".png";
+    } else {
+      pokemonImage += pokedexNumber + ".png";
+    }
+
+    setImage(pokemonImage)
+
+    flavorText(pokedexNumber).then((text) => {
+      setFlavortext(text)
+    })
+
+  }, [])
+
+  console.log(flavortext)
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={image} className="App-logo" alt="logo" />
-
-        <p>Welcome to TabbyMons</p>
-
-        {/* <a
+    <div className="App-header">
+      <img src={image} className="App-logo" style={{ width: 'auto', height: 'auto' }} alt="logo" />
+      <p className="content-container"> {flavortext}</p>
+      {/* <a
                   className="App-link"
                   href="https://reactjs.org"
                   target="_blank"
@@ -103,7 +79,6 @@ function App() {
                 >
                   Learn React
                 </a> */}
-      </header>
     </div>
   );
 }
