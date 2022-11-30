@@ -5,11 +5,13 @@
 .App-logo {
   height: 40vmin;
   pointer-events: none;
+  -webkit-filter: drop-shadow(7px 7px 7px rgb(16, 16, 16));
+  filter: drop-shadow(7px 7px 7px rgb(16, 16, 16));
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+    animation: App-logo-spin 1s infinite alternate;
   }
 }
 
@@ -29,10 +31,10 @@
 }
 
 @keyframes App-logo-spin {
-  from {
-    transform: rotate(-45deg);
+  0% {
+    transform: rotate(2deg);
   }
-  to {
-    transform: rotate(360deg);
+  100% {
+    transform: rotate(-2deg);
   }
 }
