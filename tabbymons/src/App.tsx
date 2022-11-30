@@ -58,12 +58,6 @@ async function toLocalDex(): Promise<Record<string, any>> {
 }
 
 function App() {
-  React.useEffect(() => {
-    (async () => {
-      let localDex = await toLocalDex();
-      console.log(JSON.stringify(localDex));
-    })();
-  }, []);
   // const Pokedex = require("pokeapi-js-wrapper");
   const P = new Pokedex.Pokedex();
 
