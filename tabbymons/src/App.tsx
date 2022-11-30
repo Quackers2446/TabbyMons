@@ -35,9 +35,18 @@ async function flavorText(pokeID: number): Promise<string> {
   return pokemon.flavor_text_entries[0].flavor_text;
 }
 
+async function flavorPokeName(pokeID: number): Promise<string> {
+  const P = new Pokedex.Pokedex();
+
+  const pokemon: any = await P.getPokemonByName(pokeID);
+
+  return pokemon.name;
+}
+
 function App() {
   const P = new Pokedex.Pokedex();
   const [flavortext, setFlavortext] = React.useState<string>()
+  const [flavorpokename, setFlavorpokename] = React.useState<string>()
   let [image, setImage] = React.useState<string>()
 
   //TODO: Different rates for rarer pokemon.
@@ -63,12 +72,18 @@ function App() {
       setFlavortext(text)
     })
 
+    flavorPokeName(pokedexNumber).then((text) => {
+      setFlavorpokename(text)
+    })
+
   }, [])
 
   console.log(flavortext)
+  console.log(flavorpokename)
 
   return (
     <div className="App-header">
+      <p className="name-container"> {flavorpokename}</p>
       <img src={image} className="App-logo" style={{ width: 'auto', height: 'auto' }} alt="logo" />
       <p className="content-container"> {flavortext}</p>
       {/* <a
