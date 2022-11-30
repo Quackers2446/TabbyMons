@@ -26,7 +26,6 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
-  font-family: "Light";
 }
 
 .App-link {
@@ -66,15 +65,12 @@
   text-align: center;
 }
 
-/* .container {
-  font-family: "Light";
-} */
 
-/* @media (prefers-reduced-motion: no-preference) {
-  .main-container {
+@media (prefers-reduced-motion: no-preference) {
+  .content-container {
     animation: fade-in-up 1s;
   }
-} */
+}
 
 @keyframes fade-in-up {
   from {
@@ -91,4 +87,5 @@
 .content-container {
   width: min(max(50%, 500px), 850px);
   text-align: center;
+  font-family: "Light";
 }
