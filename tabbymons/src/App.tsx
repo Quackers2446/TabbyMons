@@ -40,7 +40,11 @@ async function flavorPokeName(pokeID: number): Promise<string> {
 }
 
 function App() {
-  const P = new Pokedex.Pokedex();
+  const customOptions = {
+    cacheImages: true
+  }
+
+  const P = new Pokedex.Pokedex(customOptions);
   const [flavortext, setFlavortext] = React.useState<string>()
   const [flavorpokename, setFlavorpokename] = React.useState<string>()
   let [image, setImage] = React.useState<string>()
@@ -73,6 +77,7 @@ function App() {
       for (let i = 1; i <= 905; i++) dex[i] = { Encounters: 0, Shiny: 0 };
       localStorage.setItem("localDex", JSON.stringify(dex));
     }
+
     let tempLocalDex = localStorage.getItem("localDex");
     if (tempLocalDex) {
       let localDex = JSON.parse(tempLocalDex);
