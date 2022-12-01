@@ -72,6 +72,7 @@ function App() {
     flavorText(pokedexNumber).then((text) => {
       setFlavortext(text);
     });
+
     if (!localStorage.getItem("localDex")) {
       let dex: { [key: number]: any } = {};
       for (let i = 1; i <= 905; i++) dex[i] = { Encounters: 0, Shiny: 0 };
@@ -85,6 +86,7 @@ function App() {
       if (shinyChance == shinyRate) localDex[pokedexNumber].shiny += 1;
       localStorage.setItem("localDex", JSON.stringify(localDex));
     }
+
     flavorPokeName(pokedexNumber).then((text) => {
       setFlavorpokename(text)
     })
@@ -96,13 +98,13 @@ function App() {
 
   return (
     <div className="App-header">
-      <p className="name-container"> {flavorpokename}</p>
       <img
         src={image}
         className="App-logo"
         style={{ width: "auto", height: "auto" }}
         alt="logo"
       />
+      <p className="name-container">{flavorpokename}</p>
       <p className="content-container"> {flavortext}</p>
       {/* <a
                   className="App-link"

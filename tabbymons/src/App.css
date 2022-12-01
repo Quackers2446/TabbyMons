@@ -24,7 +24,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  font-size: calc(5px + 2vmin);
   color: white;
 }
 
@@ -44,10 +44,10 @@
 }
 
 @font-face {
-  font-family: 'Medium';
-  font-style: oblique;
-  text-transform: uppercase;
-  src: local('my-font'), url("./fonts/myfont.ttf") format('truetype');
+  /* font-family: 'Medium'; */
+  /* font-style: oblique;
+  text-transform: uppercase; */
+  /* src: local('my-font'), url("./fonts/myfont.ttf") format('truetype'); */
   font-family: 'Light';
   src: local('PKMN RBYGSC'), url("./fonts/PKMN RBYGSC.ttf") format('truetype');
 }
@@ -97,7 +97,8 @@
 .name-container {
   width: min(max(50%, 500px), 850px);
   text-align: center;
-  font-family: "Medium";
-  font-style: oblique;
+  font-family: "Light";
+  font-size: xx-large;
+  /* font-style: oblique; */
   text-transform: uppercase;
 }
