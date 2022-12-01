@@ -11,9 +11,9 @@ function getRandNum(min: number, max: number) {
   return Math.round(Math.random() * (max - min) + min);
 }
 
-function determineHabitat() {}
+function determineHabitat() { }
 
-function determineSpawn() {}
+function determineSpawn() { }
 
 async function flavorText(pokeID: number): Promise<string> {
   const P = new Pokedex.Pokedex();
@@ -31,10 +31,19 @@ async function flavorText(pokeID: number): Promise<string> {
   return pokemon.flavor_text_entries[0].flavor_text;
 }
 
+async function flavorPokeName(pokeID: number): Promise<string> {
+  const P = new Pokedex.Pokedex();
+
+  const pokemon: any = await P.getPokemonByName(pokeID);
+
+  return pokemon.name;
+}
+
 function App() {
   const P = new Pokedex.Pokedex();
-  const [flavortext, setFlavortext] = React.useState<string>();
-  let [image, setImage] = React.useState<string>();
+  const [flavortext, setFlavortext] = React.useState<string>()
+  const [flavorpokename, setFlavorpokename] = React.useState<string>()
+  let [image, setImage] = React.useState<string>()
 
   //TODO: Different rates for rarer pokemon.
   //IDEA: Can set spawns to different reigons. We could even do different routes like in a pokemon game.
@@ -71,12 +80,18 @@ function App() {
       if (shinyChance == shinyRate) localDex[pokedexNumber].shiny += 1;
       localStorage.setItem("localDex", JSON.stringify(localDex));
     }
+    flavorPokeName(pokedexNumber).then((text) => {
+      setFlavorpokename(text)
+    })
+
   }, []);
 
   console.log(flavortext);
+  console.log(flavorpokename)
 
   return (
     <div className="App-header">
+      <p className="name-container"> {flavorpokename}</p>
       <img
         src={image}
         className="App-logo"
