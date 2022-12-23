@@ -5,6 +5,7 @@ import internal from "stream";
 import { array, string } from "zod";
 import * as Pokedex from "pokeapi-js-wrapper";
 import "./fonts/PKMN RBYGSC.ttf";
+import goldstar from "./images/goldstarTransparent2.png";
 import { Tile } from "carbon-components-react";
 
 function getRandNum(min: number, max: number) {
@@ -102,9 +103,11 @@ function App() {
         src={image}
         className="App-logo"
         style={{ width: "auto", height: "auto" }}
-        alt="logo"
+        alt=""
       />
-      <p className="name-container">{flavorpokename}</p>
+      <p className="name-container">
+        {/* <img src={goldstar} alt="" />  */}
+        {flavorpokename}</p>
       <p className="content-container"> {flavortext}</p>
       {/* <a
                   className="App-link"
@@ -114,6 +117,8 @@ function App() {
                 >
                   Learn React
                 </a> */}
+
+
     </div>
   );
 }

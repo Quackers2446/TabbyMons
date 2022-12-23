@@ -1,6 +1,6 @@
 {
   "short_name": "TabbyMons",
-  "name": "TabbyMons w/ Carbon",
+  "name": "TabbyMons",
   "icons": {
     "16": "/images/16.png",
     "32": "/images/32.png",
@@ -13,7 +13,13 @@
   "chrome_url_overrides": {
     "newtab": "index.html"
   },
-  "permissions": ["storage"],
-  "host_permissions": ["https://unpkg.com/pokeapi-js-wrapper/dist/index.js"],
-  "optional_host_permissions": ["*://*/*"]
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "https://unpkg.com/pokeapi-js-wrapper/dist/index.js"
+  ],
+  "optional_host_permissions": [
+    "*://*/*"
+  ]
 }
