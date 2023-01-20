@@ -55,7 +55,7 @@ function App() {
   //extension: Spawns can even be correlated to time of day. i.e. Solrock in day, lunatone at night.
 
   React.useEffect(() => {
-    const pokedexNumber = getRandNum(1, 905); // Currently 905 Pokemon in Pokedex; update when new generations come out.
+    const pokedexNumber = getRandNum(1, 1008); // Currently 1008 Pokemon in Pokedex; update when new generations come out.
     const shinyRate = 20; // Shiny rate. It's currently set lower for fun.
     const shinyChance = getRandNum(1, shinyRate);
 
