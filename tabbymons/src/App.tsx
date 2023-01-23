@@ -23,12 +23,12 @@ async function flavorText(pokeID: number): Promise<string> {
 
   for (let i = 0; i < pokemon.flavor_text_entries.length; i++) {
     if (pokemon.flavor_text_entries[i].language.name == "en") {
-      console.log(pokemon.names);
+      // console.log(pokemon.names);
       return pokemon.flavor_text_entries[i].flavor_text;
     }
   }
 
-  console.log("No Index: " + 0);
+  // console.log("No Index: " + 0);
   return pokemon.flavor_text_entries[0].flavor_text;
 }
 
@@ -93,9 +93,6 @@ function App() {
     })
 
   }, []);
-
-  console.log(flavortext);
-  console.log(flavorpokename)
 
   return (
     <div className="App-header">
