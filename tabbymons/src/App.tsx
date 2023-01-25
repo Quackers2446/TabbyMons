@@ -5,7 +5,7 @@ import internal from "stream";
 import { array, string } from "zod";
 import * as Pokedex from "pokeapi-js-wrapper";
 import "./fonts/PKMN RBYGSC.ttf";
-import goldstar from "./images/goldstarTransparent2.png";
+import ShinySVStar from "./images/ShinySVStar.png";
 import { Tile } from "carbon-components-react";
 
 function getRandNum(min: number, max: number) {
@@ -49,6 +49,7 @@ function App() {
   const [flavortext, setFlavortext] = React.useState<string>()
   const [flavorpokename, setFlavorpokename] = React.useState<string>()
   let [image, setImage] = React.useState<string>()
+  let [ShinyStar, SetShinyStar] = React.useState<string>()
 
   //TODO: Different rates for rarer pokemon.
   //IDEA: Can set spawns to different reigons. We could even do different routes like in a pokemon game.
@@ -56,7 +57,7 @@ function App() {
 
   React.useEffect(() => {
     const pokedexNumber = getRandNum(1, 905); // Currently 905 Pokemon in Pokedex; update when new generations come out.
-    const shinyRate = 20; // Shiny rate. It's currently set lower for fun.
+    const shinyRate = 2; // Shiny rate. It's currently set lower for fun.
     const shinyChance = getRandNum(1, shinyRate);
 
     let pokemonImage =
@@ -64,8 +65,10 @@ function App() {
 
     if (shinyChance == shinyRate) {
       pokemonImage += "shiny/" + pokedexNumber + ".png";
+      SetShinyStar(ShinySVStar);
     } else {
       pokemonImage += pokedexNumber + ".png";
+      SetShinyStar(" ");
     }
 
     setImage(pokemonImage);
@@ -103,8 +106,11 @@ function App() {
         alt=""
       />
       <p className="name-container">
-        {/* <img src={goldstar} alt="" />  */}
-        {flavorpokename}</p>
+
+        <img src={ShinyStar} alt="" />
+
+        &nbsp;{flavorpokename}
+      </p>
       <p className="content-container"> {flavortext}</p>
       {/* <a
                   className="App-link"
