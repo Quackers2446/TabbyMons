@@ -1,13 +1,12 @@
 {
   "short_name": "TabbyMons",
   "name": "TabbyMons",
+  "description": "A New Adventure in Every Tab",
   "icons": {
-    "16": "/images/16.png",
-    "32": "/images/32.png",
-    "48": "/images/48.png",
-    "128": "/images/128.png"
+    "16": "16.png",
+    "48": "48.png",
+    "128": "128large.png"
   },
-  "description": "Gotta tab 'em all",
   "version": "1.0",
   "manifest_version": 3,
   "chrome_url_overrides": {
@@ -15,9 +14,6 @@
   },
   "permissions": [
     "storage"
-  ],
-  "host_permissions": [
-    "https://unpkg.com/pokeapi-js-wrapper/dist/index.js"
   ],
   "optional_host_permissions": [
     "*://*/*"
