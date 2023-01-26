@@ -34,23 +34,17 @@ function determineHabitat() { }
 function determineSpawn() {
   const rarity = getRandNum(1, 100);
   let pokeID = 0;
-  console.log(rarity);
 
   if (rarity >= 99) {
     pokeID = spawnRates[4][getRandNum(0, spawnRates[4].length - 1)];
-    console.log("SECRET RARE!!");
   } else if (rarity >= 90) {
     pokeID = spawnRates[3][getRandNum(0, spawnRates[3].length - 1)];
-    console.log("ULTRA RARE");
   } else if (rarity >= 75) {
     pokeID = spawnRates[2][getRandNum(0, spawnRates[2].length - 1)];
-    console.log("Rare!");
   } else if (rarity >= 50) {
     pokeID = spawnRates[1][getRandNum(0, spawnRates[1].length - 1)];
-    console.log("Uncommon");
   } else {
     pokeID = spawnRates[0][getRandNum(0, spawnRates[0].length - 1)];
-    console.log("common");
   }
 
   return pokeID;
@@ -90,17 +84,12 @@ function App() {
   const [flavorpokename, setFlavorpokename] = React.useState<string>()
   let [image, setImage] = React.useState<string>()
   let [ShinyStar, SetShinyStar] = React.useState<string>()
-  // let [pokedexNumber, SetPokedexNumber] = React.useState<number>()
 
   //TODO: Different rates for rarer pokemon.
   //IDEA: Can set spawns to different reigons. We could even do different routes like in a pokemon game.
   //extension: Spawns can even be correlated to time of day. i.e. Solrock in day, lunatone at night.
 
   React.useEffect(() => {
-    // determineSpawn().then((num) => {
-    //   SetPokedexNumber(num);
-    // });
-
     const pokedexNumber = determineSpawn(); // Currently 905 Pokemon in Pokedex; update when new generations come out.
     const shinyRate = 20; // Shiny rate. It's currently set lower for fun.
     const shinyChance = getRandNum(1, shinyRate);
