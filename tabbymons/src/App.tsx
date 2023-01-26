@@ -12,9 +12,62 @@ function getRandNum(min: number, max: number) {
   return Math.round(Math.random() * (max - min) + min);
 }
 
+async function updateStorage(pokedexNumber: number, shinyChance: number, shinyRate: number) {
+  if (!localStorage.getItem("localDex")) {
+    let dex: { [key: number]: any } = {};
+    for (let i = 1; i <= 905; i++) dex[i] = { Encounters: 0, Shiny: 0 };
+    localStorage.setItem("localDex", JSON.stringify(dex));
+  }
+
+  let tempLocalDex = localStorage.getItem("localDex");
+  if (tempLocalDex) {
+    let localDex = JSON.parse(tempLocalDex);
+    localDex[pokedexNumber].Encounters += 1;
+    if (shinyChance == shinyRate) localDex[pokedexNumber].Shiny += 1;
+    localStorage.setItem("localDex", JSON.stringify(localDex));
+  }
+}
+
 function determineHabitat() { }
 
-function determineSpawn() { }
+async function determineSpawn(): Promise<Record<string, any>> {
+  let common: Array<number> = [];
+  let uncommon: Array<number> = [];
+  let rare: Array<number> = [];
+  let ultraRare: Array<number> = []; // pseudo-legendaries
+  let secretRare: Array<number> = []; // legendaries / mythicals
+
+  const P = new Pokedex.Pokedex();
+  let localDex: Record<string, any> = {};
+
+  for (let i = 1; i <= 905; i++) {
+    const pokemon: any = await P.getPokemonByName(i);
+    let baseStatTotal = pokemon.stats[0].base_stat + pokemon.stats[1].base_stat + pokemon.stats[2].base_stat +
+      pokemon.stats[3].base_stat + pokemon.stats[4].base_stat + pokemon.stats[5].base_stat;
+
+    if (baseStatTotal >= 570) {
+      secretRare.push(i);
+    } else if (baseStatTotal >= 500) {
+      ultraRare.push(i);
+    } else if (baseStatTotal >= 405) {
+      rare.push(i);
+    } else if (baseStatTotal >= 300) {
+      uncommon.push(i);
+    } else {
+      common.push(i);
+    }
+
+    // console.log(i);
+  }
+
+  localDex[0] = common;
+  localDex[1] = uncommon;
+  localDex[2] = rare;
+  localDex[3] = ultraRare;
+  localDex[4] = secretRare;
+
+  return localDex;
+}
 
 async function flavorText(pokeID: number): Promise<string> {
   const P = new Pokedex.Pokedex();
@@ -56,9 +109,16 @@ function App() {
   //extension: Spawns can even be correlated to time of day. i.e. Solrock in day, lunatone at night.
 
   React.useEffect(() => {
+    (async () => {
+      let spawnRates = await determineSpawn();
+      console.log(JSON.stringify(spawnRates));
+    })();
+
     const pokedexNumber = getRandNum(1, 905); // Currently 905 Pokemon in Pokedex; update when new generations come out.
-    const shinyRate = 2; // Shiny rate. It's currently set lower for fun.
+    const shinyRate = 20; // Shiny rate. It's currently set lower for fun.
     const shinyChance = getRandNum(1, shinyRate);
+
+    determineSpawn();
 
     let pokemonImage =
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/";
@@ -71,25 +131,13 @@ function App() {
       SetShinyStar(" ");
     }
 
+    updateStorage(pokedexNumber, shinyChance, shinyRate);
+
     setImage(pokemonImage);
 
     flavorText(pokedexNumber).then((text) => {
       setFlavortext(text);
     });
-
-    if (!localStorage.getItem("localDex")) {
-      let dex: { [key: number]: any } = {};
-      for (let i = 1; i <= 905; i++) dex[i] = { Encounters: 0, Shiny: 0 };
-      localStorage.setItem("localDex", JSON.stringify(dex));
-    }
-
-    let tempLocalDex = localStorage.getItem("localDex");
-    if (tempLocalDex) {
-      let localDex = JSON.parse(tempLocalDex);
-      localDex[pokedexNumber].Encounters += 1;
-      if (shinyChance == shinyRate) localDex[pokedexNumber].shiny += 1;
-      localStorage.setItem("localDex", JSON.stringify(localDex));
-    }
 
     flavorPokeName(pokedexNumber).then((text) => {
       setFlavorpokename(text)
@@ -112,16 +160,6 @@ function App() {
         &nbsp;{flavorpokename}
       </p>
       <p className="content-container"> {flavortext}</p>
-      {/* <a
-                  className="App-link"
-                  href="https://reactjs.org"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Learn React
-                </a> */}
-
-
     </div>
   );
 }
