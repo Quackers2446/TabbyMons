@@ -4,6 +4,7 @@ import "./App.css";
 import internal from "stream";
 import { array, string } from "zod";
 import * as Pokedex from "pokeapi-js-wrapper";
+import spawnRates from './spawnRates.json';
 import "./fonts/PKMN RBYGSC.ttf";
 import ShinySVStar from "./images/ShinySVStar.png";
 import { Tile } from "carbon-components-react";
@@ -30,43 +31,29 @@ async function updateStorage(pokedexNumber: number, shinyChance: number, shinyRa
 
 function determineHabitat() { }
 
-async function determineSpawn(): Promise<Record<string, any>> {
-  let common: Array<number> = [];
-  let uncommon: Array<number> = [];
-  let rare: Array<number> = [];
-  let ultraRare: Array<number> = []; // pseudo-legendaries
-  let secretRare: Array<number> = []; // legendaries / mythicals
+function determineSpawn() {
+  const rarity = getRandNum(1, 100);
+  let pokeID = 0;
+  console.log(rarity);
 
-  const P = new Pokedex.Pokedex();
-  let localDex: Record<string, any> = {};
-
-  for (let i = 1; i <= 905; i++) {
-    const pokemon: any = await P.getPokemonByName(i);
-    let baseStatTotal = pokemon.stats[0].base_stat + pokemon.stats[1].base_stat + pokemon.stats[2].base_stat +
-      pokemon.stats[3].base_stat + pokemon.stats[4].base_stat + pokemon.stats[5].base_stat;
-
-    if (baseStatTotal >= 570) {
-      secretRare.push(i);
-    } else if (baseStatTotal >= 500) {
-      ultraRare.push(i);
-    } else if (baseStatTotal >= 405) {
-      rare.push(i);
-    } else if (baseStatTotal >= 300) {
-      uncommon.push(i);
-    } else {
-      common.push(i);
-    }
-
-    // console.log(i);
+  if (rarity >= 99) {
+    pokeID = spawnRates[4][getRandNum(0, spawnRates[4].length - 1)];
+    console.log("SECRET RARE!!");
+  } else if (rarity >= 90) {
+    pokeID = spawnRates[3][getRandNum(0, spawnRates[3].length - 1)];
+    console.log("ULTRA RARE");
+  } else if (rarity >= 75) {
+    pokeID = spawnRates[2][getRandNum(0, spawnRates[2].length - 1)];
+    console.log("Rare!");
+  } else if (rarity >= 50) {
+    pokeID = spawnRates[1][getRandNum(0, spawnRates[1].length - 1)];
+    console.log("Uncommon");
+  } else {
+    pokeID = spawnRates[0][getRandNum(0, spawnRates[0].length - 1)];
+    console.log("common");
   }
 
-  localDex[0] = common;
-  localDex[1] = uncommon;
-  localDex[2] = rare;
-  localDex[3] = ultraRare;
-  localDex[4] = secretRare;
-
-  return localDex;
+  return pokeID;
 }
 
 async function flavorText(pokeID: number): Promise<string> {
@@ -103,22 +90,20 @@ function App() {
   const [flavorpokename, setFlavorpokename] = React.useState<string>()
   let [image, setImage] = React.useState<string>()
   let [ShinyStar, SetShinyStar] = React.useState<string>()
+  // let [pokedexNumber, SetPokedexNumber] = React.useState<number>()
 
   //TODO: Different rates for rarer pokemon.
   //IDEA: Can set spawns to different reigons. We could even do different routes like in a pokemon game.
   //extension: Spawns can even be correlated to time of day. i.e. Solrock in day, lunatone at night.
 
   React.useEffect(() => {
-    (async () => {
-      let spawnRates = await determineSpawn();
-      console.log(JSON.stringify(spawnRates));
-    })();
+    // determineSpawn().then((num) => {
+    //   SetPokedexNumber(num);
+    // });
 
-    const pokedexNumber = getRandNum(1, 905); // Currently 905 Pokemon in Pokedex; update when new generations come out.
+    const pokedexNumber = determineSpawn(); // Currently 905 Pokemon in Pokedex; update when new generations come out.
     const shinyRate = 20; // Shiny rate. It's currently set lower for fun.
     const shinyChance = getRandNum(1, shinyRate);
-
-    determineSpawn();
 
     let pokemonImage =
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/";
