@@ -31,7 +31,7 @@ async function updateStorage(pokedexNumber: number, shinyChance: number, shinyRa
 
 function determineHabitat() { }
 
-function determineSpawn() {
+function determineSpawn(): number {
   const rarity = getRandNum(1, 100);
   let pokeID = 0;
 
@@ -57,7 +57,6 @@ async function flavorText(pokeID: number): Promise<string> {
 
   for (let i = 0; i < pokemon.flavor_text_entries.length; i++) {
     if (pokemon.flavor_text_entries[i].language.name == "en") {
-      // console.log(pokemon.names);
       return pokemon.flavor_text_entries[i].flavor_text;
     }
   }
@@ -123,7 +122,7 @@ function App() {
     <div className="App-header">
       <img
         src={image}
-        className="App-logo"
+        className="Pokemon-Image"
         style={{ width: "auto", height: "auto" }}
         alt=""
       />
@@ -133,7 +132,8 @@ function App() {
 
         &nbsp;{flavorpokename}
       </p>
-      <p className="content-container"> {flavortext}</p>
+
+      <p className="PokeInfo-container"> {flavortext}</p>
     </div>
   );
 }

@@ -6,31 +6,33 @@ body {
   text-align: center;
 }
 
-.App-logo {
+.Pokemon-Image {
   pointer-events: none;
   justify-content: center;
   align-items: center;
   -webkit-filter: drop-shadow(7px 7px 7px rgb(16, 16, 16));
   filter: drop-shadow(7px 7px 7px rgb(16, 16, 16));
-  max-width: 80%;
-  max-height: 80vh;
+  max-width: 70%;
+  max-height: 70vh;
+  margin-bottom: 0 auto;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .App-logo {
+  .Pokemon-Image {
     animation: App-logo-spin 1s infinite alternate;
   }
 }
 
 .App-header {
   background-color: #282c34;
-  /* min-height: 100vh; */
+
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(5px + 2vmin);
   color: white;
+  margin: 0 auto;
 
   position: absolute;
   top: 0;
@@ -55,10 +57,6 @@ body {
 }
 
 @font-face {
-  /* font-family: 'Medium'; */
-  /* font-style: oblique;
-  text-transform: uppercase; */
-  /* src: local('my-font'), url("./fonts/myfont.ttf") format('truetype'); */
   font-family: 'Light';
   src: local('PKMN RBYGSC'), url("./fonts/PKMN RBYGSC.ttf") format('truetype');
 }
@@ -81,7 +79,7 @@ body {
 
 
 @media (prefers-reduced-motion: no-preference) {
-  .content-container {
+  .PokeInfo-container {
     animation: fade-in-up 1s;
   }
 }
@@ -98,17 +96,16 @@ body {
   }
 }
 
-.content-container {
-  width: min(max(50%, 500px), 850px);
+.PokeInfo-container {
+  width: min(50%);
   text-align: center;
   font-family: "Light";
 }
 
 .name-container {
-  width: min(max(50%, 500px), 850px);
   text-align: center;
   font-family: "Light";
   font-size: xx-large;
-  /* font-style: oblique; */
   text-transform: uppercase;
+  margin: 0 auto;
 }
