@@ -5,16 +5,13 @@
   "icons": {
     "16": "16.png",
     "48": "48.png",
-    "128": "128large.png"
+    "128": "128.png"
   },
   "version": "1.1",
   "manifest_version": 3,
   "chrome_url_overrides": {
     "newtab": "index.html"
   },
-  "permissions": [
-    "storage"
-  ],
   "optional_host_permissions": [
     "*://*/*"
   ]

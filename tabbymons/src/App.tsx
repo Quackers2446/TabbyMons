@@ -7,7 +7,7 @@ import * as Pokedex from "pokeapi-js-wrapper";
 import spawnRates from './spawnRates.json';
 import "./fonts/PKMN RBYGSC.ttf";
 import ShinySVStar from "./images/ShinySVStar.png";
-import { Tile } from "carbon-components-react";
+import { Tile, Select, SelectItem, SelectItemGroup } from "carbon-components-react";
 
 function getRandNum(min: number, max: number) {
   return Math.round(Math.random() * (max - min) + min);
@@ -48,6 +48,26 @@ function determineSpawn(): number {
   }
 
   return pokeID;
+}
+
+async function determineForm(pokeName: string): Promise<number> {
+  const P = new Pokedex.Pokedex();
+
+  const pokemon: any = await P.getPokemonSpeciesByName(pokeName);
+
+  console.log(pokemon.varieties);
+
+  const rarity = getRandNum(0, 1);
+
+  // if (pokemon.forms_switchable) {
+  //   return pokeName;
+  // }
+
+  const pokeIDName = pokemon.varieties[rarity].name;
+
+  const pokemon2: any = await P.getPokemonByName(pokeIDName);
+
+  return pokemon2.id;
 }
 
 async function flavorText(pokeID: number): Promise<string> {
@@ -93,6 +113,9 @@ function App() {
     const shinyRate = 20; // Shiny rate. It's currently set lower for fun.
     const shinyChance = getRandNum(1, shinyRate);
 
+    // const pokeNumber = 570;
+    // const pokedexNumber = determineForm(pokeNumber.toString());
+
     let pokemonImage =
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/";
 
@@ -115,11 +138,31 @@ function App() {
     flavorPokeName(pokedexNumber).then((text) => {
       setFlavorpokename(text)
     })
-
   }, []);
 
   return (
     <div className="App-header">
+      {/* <Select
+        id="select-1"
+        defaultValue="placeholder-item"
+        labelText="Select an option"
+        helperText="Optional helper text">
+        <SelectItem
+          disabled
+          hidden
+          value="placeholder-item"
+          text="Choose an option"
+        />
+        <SelectItemGroup label="Category 1">
+          <SelectItem value="option-1" text="Option 1" />
+          <SelectItem value="option-2" text="Option 2" />
+        </SelectItemGroup>
+        <SelectItemGroup label="Category 2">
+          <SelectItem value="option-3" text="Option 3" />
+          <SelectItem value="option-4" text="Option 4" />
+        </SelectItemGroup>
+      </Select> */}
+
       <img
         src={image}
         className="Pokemon-Image"
