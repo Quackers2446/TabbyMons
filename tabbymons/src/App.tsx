@@ -112,7 +112,7 @@ async function createSpawn(): Promise<Record<string, any>> {
   const P = new Pokedex.Pokedex();
   let localDex: Record<string, any> = {};
 
-  for (let i = 1; i <= 1008; i++) {
+  for (let i = 10001; i <= 10263; i++) {
     const pokemon: any = await P.getPokemonByName(i);
     let baseStatTotal = pokemon.stats[0].base_stat + pokemon.stats[1].base_stat + pokemon.stats[2].base_stat +
       pokemon.stats[3].base_stat + pokemon.stats[4].base_stat + pokemon.stats[5].base_stat;
@@ -160,9 +160,6 @@ function App() {
     const pokedexNumber = determineSpawn(); // Currently 905 Pokemon in Pokedex; update when new generations come out.
     const shinyRate = 20; // Shiny rate. It's currently set lower for fun.
     const shinyChance = getRandNum(1, shinyRate);
-
-    // const pokedexNumber = getRandNum(905, 1008);
-    // const pokedexNumber = determineForm(pokeNumber.toString());
 
     // (async () => {
     //   let spawnRates = await createSpawn();
