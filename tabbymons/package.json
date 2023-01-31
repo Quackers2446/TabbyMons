@@ -6,10 +6,13 @@
     "eject": "cross-env DISABLE_ESLINT_PLUGIN=true craco eject",
     "lint": "eslint . --ext ts,tsx,jsx --max-warnings=0 --cache",
     "start": "cross-env DISABLE_ESLINT_PLUGIN=true craco start",
-    "test": "cross-env DISABLE_ESLINT_PLUGIN=true craco test"
+    "test": "cross-env DISABLE_ESLINT_PLUGIN=true craco test",
+    "storybook": "start-storybook -p 6006 -s public",
+    "build-storybook": "build-storybook -s public"
   },
   "dependencies": {
     "@carbon/icons-react": "^10.22.0",
+    "@carbon/react": "^1.21.0",
     "@carbon/themes": "^11.11.0",
     "@hookform/resolvers": "^2.9.10",
     "carbon-components": "^10.58.3",
@@ -33,6 +36,16 @@
   },
   "devDependencies": {
     "@craco/craco": "^6.4.3",
+    "@storybook/addon-actions": "^6.5.16",
+    "@storybook/addon-essentials": "^6.5.16",
+    "@storybook/addon-interactions": "^6.5.16",
+    "@storybook/addon-links": "^6.5.16",
+    "@storybook/builder-webpack5": "^6.5.16",
+    "@storybook/manager-webpack5": "^6.5.16",
+    "@storybook/node-logger": "^6.5.16",
+    "@storybook/preset-create-react-app": "^3.2.0",
+    "@storybook/react": "^6.5.16",
+    "@storybook/testing-library": "^0.0.13",
     "@types/carbon-components-react": "^7.55.2",
     "@types/carbon__icons-react": "^10.22.0",
     "@types/jest": "^27.5.2",
@@ -64,6 +77,18 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
+    ]
+  },
+  "eslintConfig": {
+    "overrides": [
+      {
+        "files": [
+          "**/*.stories.*"
+        ],
+        "rules": {
+          "import/no-anonymous-default-export": "off"
+        }
+      }
     ]
   }
 }

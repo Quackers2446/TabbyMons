@@ -4,7 +4,7 @@ import "./App.css";
 import internal from "stream";
 import { array, string } from "zod";
 import * as Pokedex from "pokeapi-js-wrapper";
-import spawnRates from './spawnRates.json';
+import spawnRates from './spawnRatesSV.json';
 import "./fonts/PKMN RBYGSC.ttf";
 import ShinySVStar from "./images/ShinySVStar.png";
 import { Tile, Select, SelectItem, SelectItemGroup } from "carbon-components-react";
@@ -16,16 +16,23 @@ function getRandNum(min: number, max: number) {
 async function updateStorage(pokedexNumber: number, shinyChance: number, shinyRate: number) {
   if (!localStorage.getItem("localDex")) {
     let dex: { [key: number]: any } = {};
-    for (let i = 1; i <= 905; i++) dex[i] = { Encounters: 0, Shiny: 0 };
+    for (let i = 1; i <= 1008; i++) dex[i] = { Encounters: 0, Shiny: 0 };
     localStorage.setItem("localDex", JSON.stringify(dex));
   }
 
   let tempLocalDex = localStorage.getItem("localDex");
   if (tempLocalDex) {
-    let localDex = JSON.parse(tempLocalDex);
-    localDex[pokedexNumber].Encounters += 1;
-    if (shinyChance == shinyRate) localDex[pokedexNumber].Shiny += 1;
-    localStorage.setItem("localDex", JSON.stringify(localDex));
+    if (tempLocalDex.length <= 32500) {
+      let localDex = JSON.parse(tempLocalDex);
+      for (let i = 906; i <= 1008; i++) localDex[i] = { Encounters: 0, Shiny: 0 };
+      localStorage.setItem("localDex", JSON.stringify(localDex));
+    }
+    else {
+      let localDex = JSON.parse(tempLocalDex);
+      localDex[pokedexNumber].Encounters += 1;
+      if (shinyChance == shinyRate) localDex[pokedexNumber].Shiny += 1;
+      localStorage.setItem("localDex", JSON.stringify(localDex));
+    }
   }
 }
 
@@ -74,15 +81,17 @@ async function flavorText(pokeID: number): Promise<string> {
   const P = new Pokedex.Pokedex();
 
   const pokemon: any = await P.getPokemonSpeciesByName(pokeID);
-
-  for (let i = 0; i < pokemon.flavor_text_entries.length; i++) {
-    if (pokemon.flavor_text_entries[i].language.name == "en") {
-      return pokemon.flavor_text_entries[i].flavor_text;
+  try {
+    for (let i = 0; i < pokemon.flavor_text_entries.length; i++) {
+      if (pokemon.flavor_text_entries[i].language.name == "en") {
+        return pokemon.flavor_text_entries[i].flavor_text;
+      }
     }
-  }
 
-  // console.log("No Index: " + 0);
-  return pokemon.flavor_text_entries[0].flavor_text;
+    return pokemon.flavor_text_entries[0].flavor_text;
+  } catch (e) {
+    return "Pokémon Scarlet & Violet:  Full Pokédex entries coming soon™";
+  }
 }
 
 async function flavorPokeName(pokeID: number): Promise<string> {
@@ -91,6 +100,45 @@ async function flavorPokeName(pokeID: number): Promise<string> {
   const pokemon: any = await P.getPokemonByName(pokeID);
 
   return pokemon.name;
+}
+
+async function createSpawn(): Promise<Record<string, any>> {
+  let common: Array<number> = [];
+  let uncommon: Array<number> = [];
+  let rare: Array<number> = [];
+  let ultraRare: Array<number> = []; // pseudo-legendaries
+  let secretRare: Array<number> = []; // legendaries / mythicals
+
+  const P = new Pokedex.Pokedex();
+  let localDex: Record<string, any> = {};
+
+  for (let i = 1; i <= 1008; i++) {
+    const pokemon: any = await P.getPokemonByName(i);
+    let baseStatTotal = pokemon.stats[0].base_stat + pokemon.stats[1].base_stat + pokemon.stats[2].base_stat +
+      pokemon.stats[3].base_stat + pokemon.stats[4].base_stat + pokemon.stats[5].base_stat;
+
+    if (baseStatTotal >= 570) {
+      secretRare.push(i);
+    } else if (baseStatTotal >= 500) {
+      ultraRare.push(i);
+    } else if (baseStatTotal >= 405) {
+      rare.push(i);
+    } else if (baseStatTotal >= 300) {
+      uncommon.push(i);
+    } else {
+      common.push(i);
+    }
+
+    console.log(i);
+  }
+
+  localDex[0] = common;
+  localDex[1] = uncommon;
+  localDex[2] = rare;
+  localDex[3] = ultraRare;
+  localDex[4] = secretRare;
+
+  return localDex;
 }
 
 function App() {
@@ -113,8 +161,13 @@ function App() {
     const shinyRate = 20; // Shiny rate. It's currently set lower for fun.
     const shinyChance = getRandNum(1, shinyRate);
 
-    // const pokeNumber = 570;
+    // const pokedexNumber = getRandNum(905, 1008);
     // const pokedexNumber = determineForm(pokeNumber.toString());
+
+    // (async () => {
+    //   let spawnRates = await createSpawn();
+    //   console.log(JSON.stringify(spawnRates));
+    // })();
 
     let pokemonImage =
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/";

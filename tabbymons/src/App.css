@@ -103,6 +103,7 @@ body {
 }
 
 .name-container {
+  padding-top: 2%;
   text-align: center;
   font-family: "Light";
   font-size: xx-large;
