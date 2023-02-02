@@ -5,6 +5,7 @@ import internal from "stream";
 import { array, string } from "zod";
 import * as Pokedex from "pokeapi-js-wrapper";
 import spawnRates from './spawnRatesSV.json';
+import spawnRatesForms from './spawnRatesForms.json';
 import "./fonts/PKMN RBYGSC.ttf";
 import ShinySVStar from "./images/ShinySVStar.png";
 import { Tile, Select, SelectItem, SelectItemGroup } from "carbon-components-react";
@@ -20,7 +21,14 @@ async function updateStorage(pokedexNumber: number, shinyChance: number, shinyRa
     localStorage.setItem("localDex", JSON.stringify(dex));
   }
 
+  if (!localStorage.getItem("localFormsDex")) {
+    let dex: { [key: number]: any } = {};
+    for (let i = 1; i <= 263; i++) dex[i] = { Encounters: 0, Shiny: 0 };
+    localStorage.setItem("localFormsDex", JSON.stringify(dex));
+  }
+
   let tempLocalDex = localStorage.getItem("localDex");
+  let tempLocalFormsDex = localStorage.getItem("localFormsDex");
   if (tempLocalDex) {
     if (tempLocalDex.length <= 32500) {
       let localDex = JSON.parse(tempLocalDex);
@@ -28,33 +36,46 @@ async function updateStorage(pokedexNumber: number, shinyChance: number, shinyRa
       localStorage.setItem("localDex", JSON.stringify(localDex));
     }
     else {
-      let localDex = JSON.parse(tempLocalDex);
-      localDex[pokedexNumber].Encounters += 1;
-      if (shinyChance == shinyRate) localDex[pokedexNumber].Shiny += 1;
-      localStorage.setItem("localDex", JSON.stringify(localDex));
+      if (pokedexNumber <= 10000) {
+        let localDex = JSON.parse(tempLocalDex);
+        localDex[pokedexNumber].Encounters += 1;
+        if (shinyChance == shinyRate) localDex[pokedexNumber].Shiny += 1;
+        localStorage.setItem("localDex", JSON.stringify(localDex));
+      } else {
+        if (tempLocalFormsDex) {
+          let localFormsDex = JSON.parse(tempLocalFormsDex);
+          localFormsDex[pokedexNumber].Encounters += 1;
+          if (shinyChance == shinyRate) localFormsDex[pokedexNumber].Shiny += 1;
+          localStorage.setItem("localFormsDex", JSON.stringify(localFormsDex));
+        }
+      }
     }
   }
 }
 
-function determineHabitat() { }
-
-function determineSpawn(): number {
+function determineSpawn(): [number, string] {
   const rarity = getRandNum(1, 100);
+  let color = "";
   let pokeID = 0;
 
   if (rarity >= 99) {
     pokeID = spawnRates[4][getRandNum(0, spawnRates[4].length - 1)];
+    color = "#FFD700";
   } else if (rarity >= 90) {
     pokeID = spawnRates[3][getRandNum(0, spawnRates[3].length - 1)];
+    color = "#cc99ff";
   } else if (rarity >= 75) {
     pokeID = spawnRates[2][getRandNum(0, spawnRates[2].length - 1)];
+    color = "#99ccff";
   } else if (rarity >= 50) {
     pokeID = spawnRates[1][getRandNum(0, spawnRates[1].length - 1)];
+    color = "#ccffcc";
   } else {
     pokeID = spawnRates[0][getRandNum(0, spawnRates[0].length - 1)];
+    color = "#ffffff";
   }
 
-  return pokeID;
+  return [pokeID, color];
 }
 
 async function determineForm(pokeName: string): Promise<number> {
@@ -117,16 +138,18 @@ async function createSpawn(): Promise<Record<string, any>> {
     let baseStatTotal = pokemon.stats[0].base_stat + pokemon.stats[1].base_stat + pokemon.stats[2].base_stat +
       pokemon.stats[3].base_stat + pokemon.stats[4].base_stat + pokemon.stats[5].base_stat;
 
-    if (baseStatTotal >= 570) {
-      secretRare.push(i);
-    } else if (baseStatTotal >= 500) {
-      ultraRare.push(i);
-    } else if (baseStatTotal >= 405) {
-      rare.push(i);
-    } else if (baseStatTotal >= 300) {
-      uncommon.push(i);
-    } else {
-      common.push(i);
+    if (!pokemon.name.includes("mega")) {
+      if (baseStatTotal >= 570) {
+        secretRare.push(i);
+      } else if (baseStatTotal >= 500) {
+        ultraRare.push(i);
+      } else if (baseStatTotal >= 405) {
+        rare.push(i);
+      } else if (baseStatTotal >= 300) {
+        uncommon.push(i);
+      } else {
+        common.push(i);
+      }
     }
 
     console.log(i);
@@ -149,22 +172,18 @@ function App() {
   const P = new Pokedex.Pokedex(customOptions);
   const [flavortext, setFlavortext] = React.useState<string>()
   const [flavorpokename, setFlavorpokename] = React.useState<string>()
-  let [image, setImage] = React.useState<string>()
-  let [ShinyStar, SetShinyStar] = React.useState<string>()
+  const [raritycolor, SetRarityColor] = React.useState<string>()
+  const [image, setImage] = React.useState<string>()
+  const [ShinyStar, SetShinyStar] = React.useState<string>()
 
-  //TODO: Different rates for rarer pokemon.
   //IDEA: Can set spawns to different reigons. We could even do different routes like in a pokemon game.
   //extension: Spawns can even be correlated to time of day. i.e. Solrock in day, lunatone at night.
 
   React.useEffect(() => {
-    const pokedexNumber = determineSpawn(); // Currently 905 Pokemon in Pokedex; update when new generations come out.
+    const spawn = determineSpawn(); // Currently 905 Pokemon in Pokedex; update when new generations come out.
+    const pokedexNumber = spawn[0];
     const shinyRate = 20; // Shiny rate. It's currently set lower for fun.
     const shinyChance = getRandNum(1, shinyRate);
-
-    // (async () => {
-    //   let spawnRates = await createSpawn();
-    //   console.log(JSON.stringify(spawnRates));
-    // })();
 
     let pokemonImage =
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/";
@@ -177,9 +196,9 @@ function App() {
       SetShinyStar(" ");
     }
 
-    updateStorage(pokedexNumber, shinyChance, shinyRate);
-
     setImage(pokemonImage);
+
+    SetRarityColor(spawn[1]);
 
     flavorText(pokedexNumber).then((text) => {
       setFlavortext(text);
@@ -188,46 +207,29 @@ function App() {
     flavorPokeName(pokedexNumber).then((text) => {
       setFlavorpokename(text)
     })
+
+    setTimeout(function () {
+      updateStorage(pokedexNumber, shinyChance, shinyRate);
+      console.log("Executed after 200 ms");
+    }, 200);
   }, []);
 
   return (
     <div className="App-header">
-      {/* <Select
-        id="select-1"
-        defaultValue="placeholder-item"
-        labelText="Select an option"
-        helperText="Optional helper text">
-        <SelectItem
-          disabled
-          hidden
-          value="placeholder-item"
-          text="Choose an option"
-        />
-        <SelectItemGroup label="Category 1">
-          <SelectItem value="option-1" text="Option 1" />
-          <SelectItem value="option-2" text="Option 2" />
-        </SelectItemGroup>
-        <SelectItemGroup label="Category 2">
-          <SelectItem value="option-3" text="Option 3" />
-          <SelectItem value="option-4" text="Option 4" />
-        </SelectItemGroup>
-      </Select> */}
-
       <img
         src={image}
         className="Pokemon-Image"
         style={{ width: "auto", height: "auto" }}
         alt=""
       />
-      <p className="name-container">
-
+      <p className="name-container"
+        style={{ color: raritycolor }}
+      >
         <img src={ShinyStar} alt="" />
-
         &nbsp;{flavorpokename}
       </p>
-
       <p className="PokeInfo-container"> {flavortext}</p>
-    </div>
+    </div >
   );
 }
 
