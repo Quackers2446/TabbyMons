@@ -12,7 +12,7 @@ body {
   align-items: center;
   -webkit-filter: drop-shadow(7px 7px 7px rgb(16, 16, 16));
   filter: drop-shadow(7px 7px 7px rgb(16, 16, 16));
-  // height: 50%;
+  height: max(40%, 30vw);
   margin-bottom: 1%;
 }
 
@@ -120,6 +120,6 @@ body {
   font-size: max(2.25vw, 30px);
 
   img {
-    width: 12.5%;
+    width: 10%;
   }
 }
