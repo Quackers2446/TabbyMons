@@ -1,14 +1,15 @@
 import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
-import internal from "stream";
-import { array, string } from "zod";
+import "./App.scss";
+import "./vendor.scss"
 import * as Pokedex from "pokeapi-js-wrapper";
 import spawnRates from './spawnRatesSV.json';
 import spawnRatesForms from './spawnRatesForms.json';
 import "./fonts/PKMN RBYGSC.ttf";
 import ShinySVStar from "./images/ShinySVStar.png";
-import { Tile, Select, SelectItem, SelectItemGroup } from "carbon-components-react";
+import { TypeIcons } from "./typeIcons";
+// @ts-ignore
+// import { Toggle } from "@carbon/react";
+import { assert } from "console";
 
 function getRandNum(min: number, max: number) {
   return Math.round(Math.random() * (max - min) + min);
@@ -164,6 +165,20 @@ async function createSpawn(): Promise<Record<string, any>> {
   return localDex;
 }
 
+async function getPokemonType(pokeID: number): Promise<[string, string]> {
+  const P = new Pokedex.Pokedex();
+
+  const pokemon: any = await P.getPokemonByName(pokeID);
+
+  if (pokemon.types[1] != null) {
+    console.log([pokemon.types[0].type.name, pokemon.types[1].type.name]);
+    return [pokemon.types[0].type.name, pokemon.types[1].type.name];
+  } else {
+    console.log([pokemon.types[0].type.name]);
+    return [pokemon.types[0].type.name, ""];
+  }
+}
+
 function App() {
   const customOptions = {
     cacheImages: true
@@ -172,9 +187,11 @@ function App() {
   const P = new Pokedex.Pokedex(customOptions);
   const [flavortext, setFlavortext] = React.useState<string>()
   const [flavorpokename, setFlavorpokename] = React.useState<string>()
+  const [pokemonType, setPokemonType] = React.useState<[string, string]>()
   const [raritycolor, SetRarityColor] = React.useState<string>()
   const [image, setImage] = React.useState<string>()
   const [ShinyStar, SetShinyStar] = React.useState<string>()
+
 
   //IDEA: Can set spawns to different reigons. We could even do different routes like in a pokemon game.
   //extension: Spawns can even be correlated to time of day. i.e. Solrock in day, lunatone at night.
@@ -184,6 +201,7 @@ function App() {
     const pokedexNumber = spawn[0];
     const shinyRate = 20; // Shiny rate. It's currently set lower for fun.
     const shinyChance = getRandNum(1, shinyRate);
+    const type = getPokemonType(pokedexNumber);
 
     let pokemonImage =
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/";
@@ -193,12 +211,16 @@ function App() {
       SetShinyStar(ShinySVStar);
     } else {
       pokemonImage += pokedexNumber + ".png";
-      SetShinyStar(" ");
+      SetShinyStar("");
     }
 
     setImage(pokemonImage);
 
     SetRarityColor(spawn[1]);
+
+    getPokemonType(pokedexNumber).then((text) => {
+      setPokemonType(text);
+    })
 
     flavorText(pokedexNumber).then((text) => {
       setFlavortext(text);
@@ -219,14 +241,19 @@ function App() {
       <img
         src={image}
         className="Pokemon-Image"
-        style={{ width: "auto", height: "auto" }}
         alt=""
       />
       <p className="name-container"
         style={{ color: raritycolor }}
       >
-        <img src={ShinyStar} alt="" />
-        &nbsp;{flavorpokename}
+        <div className="type-container">
+          {ShinyStar && <img src={ShinyStar} alt="" />}
+          &nbsp;{flavorpokename}
+          &nbsp;
+          {pokemonType?.[0] && <TypeIcons image={pokemonType[0]} />}
+          &nbsp;
+          {pokemonType?.[1] && <TypeIcons image={pokemonType[1]} />}
+        </div>
       </p>
       <p className="PokeInfo-container"> {flavortext}</p>
     </div >

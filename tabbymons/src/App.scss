@@ -12,9 +12,8 @@ body {
   align-items: center;
   -webkit-filter: drop-shadow(7px 7px 7px rgb(16, 16, 16));
   filter: drop-shadow(7px 7px 7px rgb(16, 16, 16));
-  max-width: 70%;
-  max-height: 70vh;
-  margin-bottom: 0 auto;
+  // height: 50%;
+  margin-bottom: 1%;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -97,17 +96,30 @@ body {
 }
 
 .PokeInfo-container {
+  margin-top: 1%;
   width: min(50%);
   text-align: center;
   font-family: "Light";
   word-spacing: 0.15em;
+  font-size: max(1vw, 20px);
 }
 
 .name-container {
-  padding-top: 2%;
   text-align: center;
   font-family: "Light";
-  font-size: xx-large;
   text-transform: uppercase;
   margin: 0 auto;
+}
+
+.type-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  font-size: max(2.25vw, 30px);
+
+  img {
+    width: 12.5%;
+  }
 }
