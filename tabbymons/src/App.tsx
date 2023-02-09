@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.scss";
-import "./vendor.scss"
+// import "./vendor.scss"
 import * as Pokedex from "pokeapi-js-wrapper";
 import spawnRates from './spawnRatesSV.json';
 import spawnRatesForms from './spawnRatesForms.json';
@@ -171,10 +171,10 @@ async function getPokemonType(pokeID: number): Promise<[string, string]> {
   const pokemon: any = await P.getPokemonByName(pokeID);
 
   if (pokemon.types[1] != null) {
-    console.log([pokemon.types[0].type.name, pokemon.types[1].type.name]);
+    // console.log([pokemon.types[0].type.name, pokemon.types[1].type.name]);
     return [pokemon.types[0].type.name, pokemon.types[1].type.name];
   } else {
-    console.log([pokemon.types[0].type.name]);
+    // console.log([pokemon.types[0].type.name]);
     return [pokemon.types[0].type.name, ""];
   }
 }
@@ -232,7 +232,7 @@ function App() {
 
     setTimeout(function () {
       updateStorage(pokedexNumber, shinyChance, shinyRate);
-      console.log("Executed after 200 ms");
+      // console.log("Executed after 200 ms");
     }, 200);
   }, []);
 
