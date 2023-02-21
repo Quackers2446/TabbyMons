@@ -1,15 +1,15 @@
 import React from "react";
+import "./vendor.scss"
 import "./App.scss";
-// import "./vendor.scss"
 import * as Pokedex from "pokeapi-js-wrapper";
 import spawnRates from './spawnRatesSV.json';
 import spawnRatesForms from './spawnRatesForms.json';
 import "./fonts/PKMN RBYGSC.ttf";
 import ShinySVStar from "./images/ShinySVStar.png";
 import { TypeIcons } from "./typeIcons";
-// @ts-ignore
-// import { Toggle } from "@carbon/react";
-import { assert } from "console";
+// // @ts-ignore
+// import { Theme, Header, HeaderName, HeaderGlobalBar, Search, HeaderGlobalAction } from "@carbon/react";
+// import { assert } from "console";
 
 function getRandNum(min: number, max: number) {
   return Math.round(Math.random() * (max - min) + min);
@@ -20,6 +20,17 @@ async function updateStorage(pokedexNumber: number, shinyChance: number, shinyRa
     let dex: { [key: number]: any } = {};
     for (let i = 1; i <= 1008; i++) dex[i] = { Encounters: 0, Shiny: 0 };
     localStorage.setItem("localDex", JSON.stringify(dex));
+
+    // localStorage.setItem("collectionNumber", JSON.stringify(Number(0)));
+  } else {
+    // if (collectionNumber == 0) {
+    //   let tempDex = localStorage.getItem("localDex");
+    //   if (tempDex) {
+    //     for (let i = 1; i <= 1008; i++) {
+    //       if (JSON.parse(tempDex)[i].Encounters > 0) { collectionNumber += 1; }
+    //     }
+    //   }
+    // }
   }
 
   if (!localStorage.getItem("localFormsDex")) {
@@ -30,6 +41,7 @@ async function updateStorage(pokedexNumber: number, shinyChance: number, shinyRa
 
   let tempLocalDex = localStorage.getItem("localDex");
   let tempLocalFormsDex = localStorage.getItem("localFormsDex");
+
   if (tempLocalDex) {
     if (tempLocalDex.length <= 32500) {
       let localDex = JSON.parse(tempLocalDex);
@@ -39,7 +51,15 @@ async function updateStorage(pokedexNumber: number, shinyChance: number, shinyRa
     else {
       if (pokedexNumber <= 10000) {
         let localDex = JSON.parse(tempLocalDex);
+
         localDex[pokedexNumber].Encounters += 1;
+
+        // if (localDex[pokedexNumber].Encounters == 0) {
+        //   collectionNumber++;
+        // }
+
+        // console.log(localDex[pokedexNumber].Encounters);
+
         if (shinyChance == shinyRate) localDex[pokedexNumber].Shiny += 1;
         localStorage.setItem("localDex", JSON.stringify(localDex));
       } else {
@@ -52,6 +72,9 @@ async function updateStorage(pokedexNumber: number, shinyChance: number, shinyRa
       }
     }
   }
+  // console.log(collectionNumber);
+
+  // return collectionNumber;
 }
 
 function determineSpawn(): [number, string] {
@@ -84,7 +107,7 @@ async function determineForm(pokeName: string): Promise<number> {
 
   const pokemon: any = await P.getPokemonSpeciesByName(pokeName);
 
-  console.log(pokemon.varieties);
+  // console.log(pokemon.varieties);
 
   const rarity = getRandNum(0, 1);
 
@@ -153,7 +176,7 @@ async function createSpawn(): Promise<Record<string, any>> {
       }
     }
 
-    console.log(i);
+    // console.log(i);
   }
 
   localDex[0] = common;
@@ -179,6 +202,25 @@ async function getPokemonType(pokeID: number): Promise<[string, string]> {
   }
 }
 
+async function getHeldItem(pokeID: number): Promise<string> {
+  const P = new Pokedex.Pokedex();
+
+  const pokemon: any = await P.getPokemonByName(pokeID);
+
+  const heldItemChance = getRandNum(1, 5);
+  // placeholder 20%, have yet to implement held item rarity
+
+  if (pokemon.held_items.length > 0 && heldItemChance == 1) {
+    const rand = getRandNum(0, pokemon.held_items.length - 1);
+    // console.log(pokemon.held_items[rand].item.name);
+
+    const item: any = await P.getItemByName(pokemon.held_items[rand].item.name);
+    // console.log(item.sprites["default"]);
+    return item.sprites["default"];
+  }
+  return "";
+}
+
 function App() {
   const customOptions = {
     cacheImages: true
@@ -190,6 +232,7 @@ function App() {
   const [pokemonType, setPokemonType] = React.useState<[string, string]>()
   const [raritycolor, SetRarityColor] = React.useState<string>()
   const [image, setImage] = React.useState<string>()
+  const [heldItem, setHeldItem] = React.useState<string>()
   const [ShinyStar, SetShinyStar] = React.useState<string>()
 
 
@@ -201,7 +244,7 @@ function App() {
     const pokedexNumber = spawn[0];
     const shinyRate = 20; // Shiny rate. It's currently set lower for fun.
     const shinyChance = getRandNum(1, shinyRate);
-    const type = getPokemonType(pokedexNumber);
+    // const type = getPokemonType(pokedexNumber);
 
     let pokemonImage =
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/";
@@ -222,6 +265,10 @@ function App() {
       setPokemonType(text);
     })
 
+    getHeldItem(pokedexNumber).then((text) => {
+      setHeldItem(text);
+    })
+
     flavorText(pokedexNumber).then((text) => {
       setFlavortext(text);
     });
@@ -237,7 +284,21 @@ function App() {
   }, []);
 
   return (
+    // <Theme theme="g90">
     <div className="App-header">
+      {/* <Header aria-label="Tabbymons Platform Name">
+          <HeaderName prefix="">
+            TabbyMons
+          </HeaderName>
+          <HeaderGlobalBar>
+            <HeaderGlobalAction
+              aria-label="Pokédex"
+              isActive
+              // onClick={action('app-switcher click')}
+              tooltipAlignment="end">
+            </HeaderGlobalAction>
+          </HeaderGlobalBar>
+        </Header> */}
       <img
         src={image}
         className="Pokemon-Image"
@@ -247,6 +308,8 @@ function App() {
         style={{ color: raritycolor }}
       >
         <div className="type-container">
+          {/* {heldItem && <img src={heldItem} alt="" />}
+          &nbsp; */}
           {ShinyStar && <img src={ShinyStar} alt="" />}
           &nbsp;{flavorpokename}
           &nbsp;
@@ -257,6 +320,7 @@ function App() {
       </p>
       <p className="PokeInfo-container"> {flavortext}</p>
     </div >
+    // </Theme >
   );
 }
 
