@@ -7,9 +7,10 @@ import spawnRatesForms from './spawnRatesForms.json';
 import "./fonts/PKMN RBYGSC.ttf";
 import ShinySVStar from "./images/ShinySVStar.png";
 import { TypeIcons } from "./typeIcons";
-// // @ts-ignore
-// import { Theme, Header, HeaderName, HeaderGlobalBar, Search, HeaderGlobalAction } from "@carbon/react";
-// import { assert } from "console";
+
+// @ts-ignore
+import { Theme, Header, HeaderName, HeaderGlobalBar, Search, HeaderGlobalAction } from "@carbon/react";
+import { assert } from "console";
 
 function getRandNum(min: number, max: number) {
   return Math.round(Math.random() * (max - min) + min);
@@ -18,20 +19,31 @@ function getRandNum(min: number, max: number) {
 async function updateStorage(pokedexNumber: number, shinyChance: number, shinyRate: number) {
   if (!localStorage.getItem("localDex")) {
     let dex: { [key: number]: any } = {};
+
     for (let i = 1; i <= 1008; i++) dex[i] = { Encounters: 0, Shiny: 0 };
     localStorage.setItem("localDex", JSON.stringify(dex));
 
-    // localStorage.setItem("collectionNumber", JSON.stringify(Number(0)));
-  } else {
-    // if (collectionNumber == 0) {
-    //   let tempDex = localStorage.getItem("localDex");
-    //   if (tempDex) {
-    //     for (let i = 1; i <= 1008; i++) {
-    //       if (JSON.parse(tempDex)[i].Encounters > 0) { collectionNumber += 1; }
-    //     }
-    //   }
-    // }
   }
+
+  // if (!localStorage.getItem("collectionNumber")) {
+  let dexNum: { [key: number]: any } = {};
+
+  let tempdexthing = localStorage.getItem("localDex");
+  if (tempdexthing) {
+    for (let i = 1; i <= 1008; i++) {
+      let tempdex = JSON.parse(tempdexthing);
+      if (tempdex[i].Encounters > 0) {
+        dexNum[i] = { Encounters: 1 };
+      } else {
+        dexNum[i] = { Encounters: 0 };
+      }
+    }
+  }
+
+  localStorage.setItem("collectionNumber", JSON.stringify(dexNum));
+  // }
+
+  let collectionNumber = localStorage.getItem("collectionNumber");
 
   if (!localStorage.getItem("localFormsDex")) {
     let dex: { [key: number]: any } = {};
@@ -54,9 +66,9 @@ async function updateStorage(pokedexNumber: number, shinyChance: number, shinyRa
 
         localDex[pokedexNumber].Encounters += 1;
 
-        // if (localDex[pokedexNumber].Encounters == 0) {
-        //   collectionNumber++;
-        // }
+        if (localDex[pokedexNumber].Encounters == 0) {
+          collectionNumber = JSON.stringify((Number(collectionNumber) + 1));
+        }
 
         // console.log(localDex[pokedexNumber].Encounters);
 
@@ -75,6 +87,22 @@ async function updateStorage(pokedexNumber: number, shinyChance: number, shinyRa
   // console.log(collectionNumber);
 
   // return collectionNumber;
+}
+
+async function updateCollection(): Promise<string> {
+  let num = 0;
+  let collectNum = localStorage.getItem("collectionNumber");
+  if (collectNum) {
+    let collectionNumber = JSON.parse(collectNum);
+    for (let i = 1; i <= 1008; i++) {
+      if (collectionNumber[i].Encounters > 0) {
+        num += 1;
+      }
+    }
+  }
+
+  console.log("Collection: " + num + "/1008. " + (num / 10.08).toFixed(1) + "%");
+  return num.toString();
 }
 
 function determineSpawn(): [number, string] {
@@ -234,6 +262,7 @@ function App() {
   const [image, setImage] = React.useState<string>()
   const [heldItem, setHeldItem] = React.useState<string>()
   const [ShinyStar, SetShinyStar] = React.useState<string>()
+  const [collectionNum, SetCollectionNum] = React.useState<string>()
 
 
   //IDEA: Can set spawns to different reigons. We could even do different routes like in a pokemon game.
@@ -256,6 +285,11 @@ function App() {
       pokemonImage += pokedexNumber + ".png";
       SetShinyStar("");
     }
+
+
+    updateCollection().then((text) => {
+      SetCollectionNum(text);
+    });
 
     setImage(pokemonImage);
 
@@ -284,42 +318,45 @@ function App() {
   }, []);
 
   return (
-    // <Theme theme="g90">
-    <div className="App-header">
-      {/* <Header aria-label="Tabbymons Platform Name">
+    <Theme theme="g90">
+      <div className="App-header">
+
+        <Header aria-label="Tabbymons Platform Name">
           <HeaderName prefix="">
-            TabbyMons
+            {collectionNum} / 1008
           </HeaderName>
           <HeaderGlobalBar>
             <HeaderGlobalAction
               aria-label="Pokédex"
               isActive
-              // onClick={action('app-switcher click')}
+              onClick={() => {
+
+              }}
               tooltipAlignment="end">
             </HeaderGlobalAction>
           </HeaderGlobalBar>
-        </Header> */}
-      <img
-        src={image}
-        className="Pokemon-Image"
-        alt=""
-      />
-      <p className="name-container"
-        style={{ color: raritycolor }}
-      >
-        <div className="type-container">
-          {/* {heldItem && <img src={heldItem} alt="" />}
-          &nbsp; */}
-          {ShinyStar && <img src={ShinyStar} alt="" />}
-          &nbsp;{flavorpokename}
-          &nbsp;
-          {pokemonType?.[0] && <TypeIcons image={pokemonType[0]} />}
-          &nbsp;
-          {pokemonType?.[1] && <TypeIcons image={pokemonType[1]} />}
-        </div>
-      </p>
-      <p className="PokeInfo-container"> {flavortext}</p>
-    </div >
+        </Header>
+        <img
+          src={image}
+          className="Pokemon-Image"
+          alt=""
+        />
+        <p className="name-container"
+          style={{ color: raritycolor }}
+        >
+          <div className="type-container">
+            {heldItem && <img src={heldItem} alt="" />}
+            &nbsp;
+            {ShinyStar && <img src={ShinyStar} alt="" />}
+            &nbsp;{flavorpokename}
+            &nbsp;
+            {pokemonType?.[0] && <TypeIcons image={pokemonType[0]} />}
+            &nbsp;
+            {pokemonType?.[1] && <TypeIcons image={pokemonType[1]} />}
+          </div>
+        </p>
+        <p className="PokeInfo-container"> {flavortext}</p>
+      </div >
     // </Theme >
   );
 }
