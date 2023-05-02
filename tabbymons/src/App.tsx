@@ -25,8 +25,8 @@ async function updateStorage(pokedexNumber: number, shinyChance: number, shinyRa
 
   }
 
-  // if (!localStorage.getItem("collectionNumber")) {
   let dexNum: { [key: number]: any } = {};
+  let shinyDexNum: { [key: number]: any } = {};
 
   let tempdexthing = localStorage.getItem("localDex");
   if (tempdexthing) {
@@ -37,13 +37,21 @@ async function updateStorage(pokedexNumber: number, shinyChance: number, shinyRa
       } else {
         dexNum[i] = { Encounters: 0 };
       }
+
+      if (tempdex[i].Shiny > 0) {
+        shinyDexNum[i] = { Shiny: 1 };
+      } else {
+        shinyDexNum[i] = { Shiny: 0 };
+      }
     }
   }
 
   localStorage.setItem("collectionNumber", JSON.stringify(dexNum));
+  localStorage.setItem("shinyCollectionNumber", JSON.stringify(shinyDexNum));
   // }
 
   let collectionNumber = localStorage.getItem("collectionNumber");
+  let shinyCollectionNumber = localStorage.getItem("shinyCollectionNumber");
 
   if (!localStorage.getItem("localFormsDex")) {
     let dex: { [key: number]: any } = {};
@@ -70,6 +78,10 @@ async function updateStorage(pokedexNumber: number, shinyChance: number, shinyRa
           collectionNumber = JSON.stringify((Number(collectionNumber) + 1));
         }
 
+        if (localDex[pokedexNumber].Shiny == 0) {
+          shinyCollectionNumber = JSON.stringify((Number(shinyCollectionNumber) + 1));
+        }
+
         // console.log(localDex[pokedexNumber].Encounters);
 
         if (shinyChance == shinyRate) localDex[pokedexNumber].Shiny += 1;
@@ -89,20 +101,26 @@ async function updateStorage(pokedexNumber: number, shinyChance: number, shinyRa
   // return collectionNumber;
 }
 
-async function updateCollection(): Promise<string> {
+async function updateCollection(): Promise<[string, string]> {
   let num = 0;
+  let shinyNum = 0;
   let collectNum = localStorage.getItem("collectionNumber");
-  if (collectNum) {
+  let shinyCollectNum = localStorage.getItem("shinyCollectionNumber");
+  if (collectNum && shinyCollectNum) {
     let collectionNumber = JSON.parse(collectNum);
+    let shinyCollectionNumber = JSON.parse(shinyCollectNum);
     for (let i = 1; i <= 1008; i++) {
       if (collectionNumber[i].Encounters > 0) {
         num += 1;
       }
+      if (shinyCollectionNumber[i].Shiny > 0) {
+        shinyNum += 1;
+      }
     }
   }
 
-  console.log("Collection: " + num + "/1008. " + (num / 10.08).toFixed(1) + "%");
-  return num.toString();
+  console.log("Collection: " + num + "/1008. " + (num / 10.08).toFixed(1) + "%" + " Shiny Collection: " + shinyNum + "/1008. " + (shinyNum / 10.08).toFixed(1) + "%");
+  return [num.toString(), shinyNum.toString()];
 }
 
 function determineSpawn(): [number, string] {
@@ -262,7 +280,7 @@ function App() {
   const [image, setImage] = React.useState<string>()
   const [heldItem, setHeldItem] = React.useState<string>()
   const [ShinyStar, SetShinyStar] = React.useState<string>()
-  const [collectionNum, SetCollectionNum] = React.useState<string>()
+  const [collectionNum, SetCollectionNum] = React.useState<[string, string]>()
 
 
   //IDEA: Can set spawns to different reigons. We could even do different routes like in a pokemon game.
@@ -287,10 +305,6 @@ function App() {
     }
 
 
-    updateCollection().then((text) => {
-      SetCollectionNum(text);
-    });
-
     setImage(pokemonImage);
 
     SetRarityColor(spawn[1]);
@@ -313,6 +327,10 @@ function App() {
 
     setTimeout(function () {
       updateStorage(pokedexNumber, shinyChance, shinyRate);
+
+      updateCollection().then((text) => {
+        SetCollectionNum(text);
+      });
       // console.log("Executed after 200 ms");
     }, 200);
   }, []);
@@ -323,7 +341,10 @@ function App() {
 
         <Header aria-label="Tabbymons Platform Name">
           <HeaderName prefix="">
-            {collectionNum} / 1008
+            {collectionNum && collectionNum[0]} / 1008
+          </HeaderName>
+          <HeaderName prefix="">
+            {collectionNum && collectionNum[1]} / 1008
           </HeaderName>
           <HeaderGlobalBar>
             <HeaderGlobalAction
