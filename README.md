@@ -6,6 +6,14 @@ Every new tab you open contains a new Pokémon! Who knows, maybe you'll even stu
 
 Welcome to your journey with Pokemon, now conveniently in your browser and every new tab!
 
+## Not available anymore
+
+Sadly this project was copyright striked by the Pokemon company and taken down from the extension store. If you still wish to use this extension, you can follow the following steps.
+
+1) Open the project and run `npm run build`
+2) Find the build file and upload the manifest.json to `chrome://extensions` after turning developer mode on
+3) Profit
+
 ## Available Scripts
 
 In the project directory, you can run:
