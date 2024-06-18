@@ -16,11 +16,33 @@ body {
   margin-bottom: 1%;
 }
 
+// .sidenav-container {
+//     height: 500px; /* Adjust the height as needed */
+//     overflow-y: auto;
+//   }
+.scrollable-menu {
+    overflow-y: auto;
+  }
+
+.grid-container {
+    display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  overflow-y: auto;
+}
+
+.grid-container img {
+    height: 125%;
+    width: 125%;
+  }
+  
 @media (prefers-reduced-motion: no-preference) {
   .Pokemon-Image {
     animation: App-logo-spin 1s infinite alternate;
   }
 }
+
 
 .App-header {
   background: #282c34;
@@ -38,6 +60,12 @@ body {
   right: 0;
   bottom: 0;
   left: 0;
+}
+
+.Pokedex-Div {
+    justify-content: left;
+    align-items: left;
+    // width: 10em;
 }
 
 .App-link {
@@ -123,3 +151,10 @@ body {
     width: 10%;
   }
 }
+
+.cropped-image {
+    width: 400; /* Adjust as needed */
+    height: 475; /* Adjust as needed */
+    object-fit: cover;
+    clip-path: inset(3% 8% 53% 8%);
+  }
