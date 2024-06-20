@@ -11,8 +11,6 @@ export const PokedexComponent: React.FC<PokedexProps> = (props: PokedexProps) =>
     const [isSideNavExpanded, setIsSideNavExpanded] = React.useState<boolean>(false);
     const PokedexObj = JSON.parse(Pokedex);
 
-    console.log(PokedexObj);
-
     const chunkArray = (array: number[], size: number) => {
         const chunkedArr = [];
         for (let i = 0; i < array.length; i += size) {
@@ -49,7 +47,7 @@ export const PokedexComponent: React.FC<PokedexProps> = (props: PokedexProps) =>
             {
                 <carbon.SideNavItems>
                     {regions.map(reigon => (
-                        <carbon.SideNavMenu renderIcon={Fade} title={reigon.name} className={"sidenav-container" + (isSideNavExpanded ? "scrollable-menu" : "")} >
+                        <carbon.SideNavMenu renderIcon={Fade} title={reigon.name} className={"sidenav-container"} >
                             <br></br>
                             {
                                 reigon.data.map((chunk, index) => (
